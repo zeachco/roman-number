@@ -33,12 +33,13 @@ function RomanNumber(value) {
 	}
 
 	this.value = 0; // intialize
-	const romanSymbolsRe = /^IV|IX|XL|XC|CD|CM|([IVXLCDM])\1*/g;
-	let m, prev = Infinity;
+	const romanSymbolsRe = /IV|IX|XL|XC|CD|CM|([IVXLCDM])\1*/g;
+	let m, prev = Infinity, lastIndex = 0;
 	while (m = romanSymbolsRe.exec(value)) {
 		if (m[0].length > 3) {
 			throw new Error('invalid roman value');
 		}
+		lastIndex += m[0].length;
 		const v = m[1] ? romanToIntMap[m[1]] * m[0].length : romanToIntMap[m[0]];
 
 		// ensure the value is less than the previous one
@@ -48,10 +49,13 @@ function RomanNumber(value) {
 		prev = v;
 		this.value += v;
 	}
-	
-	if (this.value === 0) { // try to parse as base10 Arabic number
+
+	if (lastIndex === 0) { // try to parse as base10 Arabic number
 		this.value = Number(value);
+	} else if (lastIndex !== value.length) {
+		throw new Error('invalid roman value'); // some ivalid roman literals exist in value
 	}
+
 	RomanNumber.checkValidity(this.value);
 }
 
@@ -150,13 +154,16 @@ function runTests() {
 	];
 
 	inputs.forEach(([input, expectedArabic, expectedRoman = input]) => {
+		let num = null;
 		try {
-			const num = new RomanNumber(input);
-			console.assert(num.toInt() === expectedArabic);
-			console.assert(num.toString() === expectedRoman);
+			num = new RomanNumber(input);	
 		} catch(e) {
+			console.log(e.message + ':\t', input);
 			console.assert(expectedArabic === null);
+			return;
 		}
+		console.assert(num.toInt() === expectedArabic);
+		console.assert(num.toString() === expectedRoman);
 	});
 
 	console.log('tests passed');
