@@ -13,10 +13,7 @@ const romanToIntMap = {
 	CM: 900,
 	M:  1000
 };
-const intToRomanMap = {}; // invert romanToIntMap
-for (const key in romanToIntMap) {
-	intToRomanMap[romanToIntMap[key]] = key;
-}
+const romanSymbols = Object.keys(romanToIntMap);
 
 // comment: it's weird that Romans didn't write 990 XM instead of CMXC
 
@@ -67,15 +64,38 @@ class RomanNumber {
 	}
 
 	toString() {
-		// 
-		throw new Error('toRoman todo');
-	}
+		let s = ''; // value to return
+		let v = this.value;
+		let n = Math.floor(Math.log10(v)); // number of digits-1, 3900 -> 3; 285 -> 2
+		let a = Math.floor(v / 10**n); // the factor for the nth digit
 
+		while (n >= 0) {
+			if (a < 4) {
+				s += romanSymbols[4 * n].repeat(a);
+			} else if (a === 4) {
+				s += romanSymbols[4 * n + 1];
+			} else if (a === 5) {
+				s += romanSymbols[4 * n + 2];
+			} else if (a < 9) {
+				s += romanSymbols[4 * n + 2] + romanSymbols[4 * n].repeat(a - 5);
+			} else {
+				s += romanSymbols[4 * n + 3];
+			}
+			v -= a * 10**n;
+			n--;
+			a = Math.floor(v / 10**n);
+		}
+		return s; // we could cache it, for perf
+	}
 }
+
 
 module.exports = RomanNumber;
 
 RomanNumber.tests = function() {
+
+
+	console.assert(new RomanNumber(152)+'', 'CLII');
 
 	const inputs = [ // [input, null for error or expected integer] // todo check which error
 		[null, null],
@@ -113,5 +133,7 @@ RomanNumber.tests = function() {
 		}
 	}
 };
+
+
 
 // RomanNumber.tests()
