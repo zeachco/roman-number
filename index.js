@@ -21,7 +21,7 @@ class RomanNumber {
 	constructor(value) {
 		if (typeof value === 'number') {
 			this.value = value;
-			checkValidity(this.value);
+			RomanNumber.checkValidity(this.value);
 			return;
 		}
 		if (!value || typeof value !== 'string') {
@@ -48,17 +48,17 @@ class RomanNumber {
 		if (this.value === 0) { // try to parse as base10 Arabic number
 			this.value = Number(value);
 		}
-		checkValidity(this.value);
+		RomanNumber.checkValidity(this.value);
 	}
 
 	static checkValidity(n) {
-		if (isNaN(this.value)) {
+		if (isNaN(n)) {
 			throw new Error('invalid value');
 		}
-		if (!Number.isInteger(this.value)) {
+		if (!Number.isInteger(n)) {
 			throw new Error('invalid float value');
 		}
-		if (this.value < 1 || this.value > 3999) {
+		if (n < 1 || n > 3999) {
 			throw new RangeError('invalid range value');
 		}
 	}
@@ -98,26 +98,25 @@ module.exports = RomanNumber;
 
 RomanNumber.tests = function() {
 
-
 	console.assert(new RomanNumber(152)+'', 'CLII');
 
 	const inputs = [ // [input, null for error or expected integer] // todo check which error
 		[null, null],
 		['', null],
 		[0, null], 
-		[1, 1],
-		[3, 3],
-		[4, 4],
-		[5, 5],
+		[1, 1, 'I'],
+		[3, 3, 'III'],
+		[4, 4, 'IV'],
+		[5, 5, 'V'],
 		['I', 1],
 		['III', 3],
 		['IIII', null],
 		['IV', 4],
 		['V', 5],
-		[1968, 1968],
-		['1473', 1473],
-		[2999, 2999],
-		[3000, 3000],
+		[1968, 1968, 'MCMLXVIII'],
+		['1473', 1473, 'MCDLXXIII'],
+		[2999, 2999, 'MMCMXCIX'],
+		[3000, 3000, 'MMM'],
 		[10000, null],
 		['CDXXIX', 429],
 		['CD1X', null],
@@ -128,16 +127,19 @@ RomanNumber.tests = function() {
 		['MMMMDMXCIX', null]
 	];
 
-	for (const [input, expected] of inputs) {
+	inputs.forEach(([input, expectedArabic, expectedRoman = input]) => {
 		try {
 			const num = new RomanNumber(input);
-			console.assert(num.toInt() === expected);
+			console.assert(num.toInt() === expectedArabic);
+			console.assert(num.toString() === expectedRoman);
 		} catch(e) {
-			console.assert(expected === null);
+			console.assert(expectedArabic === null);
 		}
-	}
+	});
+
+	console.log('tests passed');
 };
 
 
 
-// RomanNumber.tests()
+RomanNumber.tests()
