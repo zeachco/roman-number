@@ -73,11 +73,11 @@ RomanNumber.prototype.toInt = function() {
 
 RomanNumber.prototype.toString = function() {
 	let s = ''; // value to return
-	let v = this.value;
-	let n = Math.floor(Math.log10(v)); // number of digits-1, 3900 -> 3; 285 -> 2
-	let a = Math.floor(v / Math.pow(10, n)); // the factor for the nth digit
+	const v = this.value + ''; // stringify base10 arabic value
 
-	while (n >= 0) {
+	for (let i = 0; i < v.length; i++) {
+		const a = +v[i];
+		const n = v.length - 1 - i;
 		if (a < 4) {
 			s += romanSymbols[4 * n].repeat(a);
 		} else if (a === 4) {
@@ -89,19 +89,40 @@ RomanNumber.prototype.toString = function() {
 		} else {
 			s += romanSymbols[4 * n + 3];
 		}
-		v -= a * Math.pow(10, n);
-		n--;
-		a = Math.floor(v / Math.pow(10, n));
 	}
 	return s; // we could cache it, for perf
 }
 
 
-RomanNumber.tests = function() {
+// ------ perfs --------
+
+function runPerfScript() {
+	for (let i = 1; i < 4000; i++) {
+		const n = RomanNumber(i);
+		const n2 = RomanNumber(4000 - i);
+		const s = '' + n + n2;
+	}
+}
+
+function runPerfTest() {
+	console.time(1);
+	for (let k=0; k<10; k++) {
+		runPerfScript();
+	}
+	console.timeEnd(1);
+}
+// runPerfTest();
+// runPerfTest();
+// runPerfTest();
+
+
+// ------- tests -------
+
+function runTests() {
 
 	console.assert(RomanNumber(152)+'', 'CLII');
 
-	const inputs = [ // [input, null for error or expected integer] // todo check which error
+	const inputs = [ // [input, null for error or expected integer, expected roman number (default as input if undefined)] // todo check which error
 		[null, null],
 		['', null],
 		[0, null], 
@@ -141,6 +162,4 @@ RomanNumber.tests = function() {
 	console.log('tests passed');
 };
 
-
-
-RomanNumber.tests();
+runTests();
