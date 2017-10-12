@@ -75,7 +75,7 @@ RomanNumber.prototype.toString = function() {
 	let s = ''; // value to return
 	let v = this.value;
 	let n = Math.floor(Math.log10(v)); // number of digits-1, 3900 -> 3; 285 -> 2
-	let a = Math.floor(v / 10**n); // the factor for the nth digit
+	let a = Math.floor(v / Math.pow(10, n)); // the factor for the nth digit
 
 	while (n >= 0) {
 		if (a < 4) {
@@ -89,9 +89,9 @@ RomanNumber.prototype.toString = function() {
 		} else {
 			s += romanSymbols[4 * n + 3];
 		}
-		v -= a * 10**n;
+		v -= a * Math.pow(10, n);
 		n--;
-		a = Math.floor(v / 10**n);
+		a = Math.floor(v / Math.pow(10, n));
 	}
 	return s; // we could cache it, for perf
 }
