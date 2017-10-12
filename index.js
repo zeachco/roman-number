@@ -120,7 +120,7 @@ function runPerfTest() {
 
 function runTests() {
 
-	console.assert(RomanNumber(152)+'', 'CLII');
+	console.assert(RomanNumber(152) + '' === 'CLII');
 
 	const inputs = [ // [input, null for error or expected integer, expected roman number (default as input if undefined)] // todo check which error
 		[null, null],
