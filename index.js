@@ -17,88 +17,89 @@ const romanSymbols = Object.keys(romanToIntMap);
 
 // comment: it's weird that Romans didn't write 990 XM instead of CMXC
 
-class RomanNumber {
-	constructor(value) {
-		if (typeof value === 'number') {
-			this.value = value;
-			RomanNumber.checkValidity(this.value);
-			return;
-		}
-		if (!value || typeof value !== 'string') {
-			throw new TypeError('String or Integer value required');
-		}
+module.exports = RomanNumber;
 
-		this.value = 0; // intialize
-		const romanSymbolsRe = /^IV|IX|XL|XC|CD|CM|([IVXLCDM])\1*/g;
-		let m, prev = Infinity;
-		while (m = romanSymbolsRe.exec(value)) {
-			if (m[0].length > 3) {
-				throw new Error('invalid roman value');
-			}
-			const v = m[1] ? romanToIntMap[m[1]] * m[0].length : romanToIntMap[m[0]];
-
-			// ensure the value is less than the previous one
-			if (v >= prev) {
-				throw new Error('invalid roman value');
-			}
-			prev = v;
-			this.value += v;
-		}
-		
-		if (this.value === 0) { // try to parse as base10 Arabic number
-			this.value = Number(value);
-		}
+function RomanNumber(value) {
+	if (!(this instanceof RomanNumber)) {
+		return new RomanNumber(value);
+	}
+	if (typeof value === 'number') {
+		this.value = value;
 		RomanNumber.checkValidity(this.value);
+		return;
+	}
+	if (!value || typeof value !== 'string') {
+		throw new TypeError('String or Integer value required');
 	}
 
-	static checkValidity(n) {
-		if (isNaN(n)) {
-			throw new Error('invalid value');
+	this.value = 0; // intialize
+	const romanSymbolsRe = /^IV|IX|XL|XC|CD|CM|([IVXLCDM])\1*/g;
+	let m, prev = Infinity;
+	while (m = romanSymbolsRe.exec(value)) {
+		if (m[0].length > 3) {
+			throw new Error('invalid roman value');
 		}
-		if (!Number.isInteger(n)) {
-			throw new Error('invalid float value');
+		const v = m[1] ? romanToIntMap[m[1]] * m[0].length : romanToIntMap[m[0]];
+
+		// ensure the value is less than the previous one
+		if (v >= prev) {
+			throw new Error('invalid roman value');
 		}
-		if (n < 1 || n > 3999) {
-			throw new RangeError('invalid range value');
-		}
+		prev = v;
+		this.value += v;
 	}
-
-	toInt() {
-		return this.value;
+	
+	if (this.value === 0) { // try to parse as base10 Arabic number
+		this.value = Number(value);
 	}
+	RomanNumber.checkValidity(this.value);
+}
 
-	toString() {
-		let s = ''; // value to return
-		let v = this.value;
-		let n = Math.floor(Math.log10(v)); // number of digits-1, 3900 -> 3; 285 -> 2
-		let a = Math.floor(v / 10**n); // the factor for the nth digit
-
-		while (n >= 0) {
-			if (a < 4) {
-				s += romanSymbols[4 * n].repeat(a);
-			} else if (a === 4) {
-				s += romanSymbols[4 * n + 1];
-			} else if (a === 5) {
-				s += romanSymbols[4 * n + 2];
-			} else if (a < 9) {
-				s += romanSymbols[4 * n + 2] + romanSymbols[4 * n].repeat(a - 5);
-			} else {
-				s += romanSymbols[4 * n + 3];
-			}
-			v -= a * 10**n;
-			n--;
-			a = Math.floor(v / 10**n);
-		}
-		return s; // we could cache it, for perf
+RomanNumber.checkValidity = n => {
+	if (isNaN(n)) {
+		throw new Error('invalid value');
+	}
+	if (!Number.isInteger(n)) {
+		throw new Error('invalid float value');
+	}
+	if (n < 1 || n > 3999) {
+		throw new RangeError('invalid range value');
 	}
 }
 
+RomanNumber.prototype.toInt = function() {
+	return this.value;
+}
 
-module.exports = RomanNumber;
+RomanNumber.prototype.toString = function() {
+	let s = ''; // value to return
+	let v = this.value;
+	let n = Math.floor(Math.log10(v)); // number of digits-1, 3900 -> 3; 285 -> 2
+	let a = Math.floor(v / 10**n); // the factor for the nth digit
+
+	while (n >= 0) {
+		if (a < 4) {
+			s += romanSymbols[4 * n].repeat(a);
+		} else if (a === 4) {
+			s += romanSymbols[4 * n + 1];
+		} else if (a === 5) {
+			s += romanSymbols[4 * n + 2];
+		} else if (a < 9) {
+			s += romanSymbols[4 * n + 2] + romanSymbols[4 * n].repeat(a - 5);
+		} else {
+			s += romanSymbols[4 * n + 3];
+		}
+		v -= a * 10**n;
+		n--;
+		a = Math.floor(v / 10**n);
+	}
+	return s; // we could cache it, for perf
+}
+
 
 RomanNumber.tests = function() {
 
-	console.assert(new RomanNumber(152)+'', 'CLII');
+	console.assert(RomanNumber(152)+'', 'CLII');
 
 	const inputs = [ // [input, null for error or expected integer] // todo check which error
 		[null, null],
@@ -142,4 +143,4 @@ RomanNumber.tests = function() {
 
 
 
-RomanNumber.tests()
+RomanNumber.tests();
