@@ -21,6 +21,7 @@ class RomanNumber {
 	constructor(value) {
 		if (typeof value === 'number') {
 			this.value = value;
+			checkValidity(this.value);
 			return;
 		}
 		if (!value || typeof value !== 'string') {
@@ -47,7 +48,10 @@ class RomanNumber {
 		if (this.value === 0) { // try to parse as base10 Arabic number
 			this.value = Number(value);
 		}
+		checkValidity(this.value);
+	}
 
+	static checkValidity(n) {
 		if (isNaN(this.value)) {
 			throw new Error('invalid value');
 		}
@@ -114,7 +118,7 @@ RomanNumber.tests = function() {
 		['1473', 1473],
 		[2999, 2999],
 		[3000, 3000],
-		[10000, 10000],
+		[10000, null],
 		['CDXXIX', 429],
 		['CD1X', null],
 		['error', null],
