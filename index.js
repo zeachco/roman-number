@@ -34,8 +34,9 @@ function RomanNumber(value) {
 
 	this.value = 0; // intialize
 	const romanSymbolsRe = /IV|IX|XL|XC|CD|CM|([IVXLCDM])\1*/g;
+	const str = value.trim();
 	let m, prev = Infinity, lastIndex = 0;
-	while (m = romanSymbolsRe.exec(value)) {
+	while (m = romanSymbolsRe.exec(str)) {
 		if (m[0].length > 3) {
 			throw new Error('invalid roman value');
 		}
@@ -51,8 +52,8 @@ function RomanNumber(value) {
 	}
 
 	if (lastIndex === 0) { // try to parse as base10 Arabic number
-		this.value = Number(value);
-	} else if (lastIndex !== value.length) {
+		this.value = Number(str);
+	} else if (lastIndex !== str.length) {
 		throw new Error('invalid roman value'); // some ivalid roman literals exist in value
 	}
 
