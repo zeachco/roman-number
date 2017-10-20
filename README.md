@@ -1,4 +1,4 @@
-## Roman numbers parser
+## Roman numbers parser [![Build Status](https://travis-ci.org/caub/roman-number.svg?branch=master)](https://travis-ci.org/caub/roman-number)
 
 ```js
 const RomanNumber = require('roman-number'); // npm i -S caub/roman-number

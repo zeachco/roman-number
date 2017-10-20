@@ -101,29 +101,26 @@ RomanNumber.prototype.toString = function() {
 
 // ------ perfs --------
 
-function runPerfScript() {
-	for (let i = 1; i < 4000; i++) {
-		const n = RomanNumber(i);
-		const n2 = RomanNumber(4000 - i);
-		const s = '' + n + n2;
+RomanNumber.runPerf = () => {
+	function runOnce() {
+		for (let i = 1; i < 4000; i++) {
+			const n = RomanNumber(i);
+			const n1 = RomanNumber(n + '');
+			const n2 = RomanNumber(4000 - i);
+			const s = '' + n1 + n2;
+		}
 	}
-}
-
-function runPerfTest() {
 	console.time(1);
 	for (let k=0; k<10; k++) {
-		runPerfScript();
+		runOnce();
 	}
 	console.timeEnd(1);
-}
-// runPerfTest();
-// runPerfTest();
-// runPerfTest();
+};
 
 
 // ------- tests -------
 
-function runTests() {
+RomanNumber.runTest = () => {
 
 	console.assert(RomanNumber(152) + '' === 'CLII');
 
@@ -169,5 +166,3 @@ function runTests() {
 
 	console.log('tests passed');
 };
-
-runTests();
