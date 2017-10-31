@@ -4,7 +4,8 @@
   "description": "parse and stringify roman numbers",
   "main": "index.js",
   "scripts": {
-    "test": "node -e \"require('./').runTest()\""
+    "test": "nyc mocha --exit",
+    "coverage": "nyc report --reporter=lcov > coverage.lcov && codecov"
   },
   "repository": {
     "type": "git",
@@ -15,10 +16,18 @@
     "number",
     "parser"
   ],
+  "engines": {
+    "node": "6.11"
+  },
   "author": "caub",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/caub/roman-number/issues"
   },
-  "homepage": "https://github.com/caub/roman-number#readme"
+  "homepage": "https://github.com/caub/roman-number#readme",
+  "devDependencies": {
+    "codecov": "^3.0.0",
+    "mocha": "^4.0.1",
+    "nyc": "^11.2.1"
+  }
 }
