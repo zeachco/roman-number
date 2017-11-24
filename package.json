@@ -1,8 +1,9 @@
 {
   "name": "roman-number",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "parse and stringify roman numbers",
   "main": "index.js",
+  "files": ["index.js"],
   "scripts": {
     "test": "nyc mocha --exit",
     "coverage": "nyc report --reporter=lcov > coverage.lcov && codecov"
