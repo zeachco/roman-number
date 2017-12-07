@@ -1,6 +1,6 @@
 {
   "name": "roman-number",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "parse and stringify roman numbers",
   "main": "index.js",
   "files": ["index.js"],
@@ -18,7 +18,7 @@
     "parser"
   ],
   "engines": {
-    "node": "6.11"
+    "node": ">=6"
   },
   "author": "caub",
   "license": "ISC",
