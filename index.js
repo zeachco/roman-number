@@ -60,7 +60,7 @@ function RomanNumber(value) {
 	RomanNumber.checkValidity(this.value);
 }
 
-RomanNumber.checkValidity = n => {
+RomanNumber.checkValidity = function(n) {
 	if (isNaN(n)) {
 		throw new Error('invalid value');
 	}
